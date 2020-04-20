@@ -999,17 +999,17 @@ Text GLabel 3300 5800 0    39   Input ~ 0
 VIN
 Wire Wire Line
 	3600 5800 3300 5800
-Text GLabel 3100 3300 0    39   Output ~ 0
+Text GLabel 3100 3500 0    39   Output ~ 0
 IN1
 Text GLabel 3100 3400 0    39   Output ~ 0
 IN2
-Text GLabel 3100 3500 0    39   Output ~ 0
+Text GLabel 3100 3300 0    39   Output ~ 0
 nSLEEP
-Text GLabel 3300 5700 0    39   Input ~ 0
-nFAULT
 Text GLabel 3300 5600 0    39   Input ~ 0
+nFAULT
+Text GLabel 3300 5700 0    39   Input ~ 0
 SNSOUT
-Text GLabel 2100 6350 0    50   Input ~ 0
+Text GLabel 2100 6000 0    50   Input ~ 0
 SO
 Wire Wire Line
 	2450 3550 2450 3600
@@ -1026,49 +1026,43 @@ Wire Wire Line
 $Comp
 L tinkerforge:Rs R2
 U 1 1 5E9B3691
-P 2500 6350
-F 0 "R2" V 2450 6350 31  0000 C CNN
-F 1 "7,5k" V 2500 6350 31  0000 C CNN
-F 2 "kicad-libraries:R0603F" H 2500 6350 60  0001 C CNN
-F 3 "" H 2500 6350 60  0000 C CNN
-	1    2500 6350
+P 2500 6000
+F 0 "R2" V 2450 6000 31  0000 C CNN
+F 1 "7,5k" V 2500 6000 31  0000 C CNN
+F 2 "kicad-libraries:R0603F" H 2500 6000 60  0001 C CNN
+F 3 "" H 2500 6000 60  0000 C CNN
+	1    2500 6000
 	0    1    1    0   
 $EndComp
 $Comp
 L tinkerforge:Rs R4
 U 1 1 5E9B4017
-P 2700 6500
-F 0 "R4" V 2650 6500 31  0000 C CNN
-F 1 "10k" V 2700 6500 31  0000 C CNN
-F 2 "kicad-libraries:R0603F" H 2700 6500 60  0001 C CNN
-F 3 "" H 2700 6500 60  0000 C CNN
-	1    2700 6500
+P 2700 6150
+F 0 "R4" V 2650 6150 31  0000 C CNN
+F 1 "10k" V 2700 6150 31  0000 C CNN
+F 2 "kicad-libraries:R0603F" H 2700 6150 60  0001 C CNN
+F 3 "" H 2700 6150 60  0000 C CNN
+	1    2700 6150
 	-1   0    0    1   
 $EndComp
 $Comp
 L tinkerforge:GND #PWR06
 U 1 1 5E9B43D7
-P 2700 6600
-F 0 "#PWR06" H 2700 6350 50  0001 C CNN
-F 1 "GND" H 2700 6450 50  0000 C CNN
-F 2 "" H 2700 6600 50  0000 C CNN
-F 3 "" H 2700 6600 50  0000 C CNN
-	1    2700 6600
+P 2700 6250
+F 0 "#PWR06" H 2700 6000 50  0001 C CNN
+F 1 "GND" H 2700 6100 50  0000 C CNN
+F 2 "" H 2700 6250 50  0000 C CNN
+F 3 "" H 2700 6250 50  0000 C CNN
+	1    2700 6250
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2700 6350 2700 6400
+	2700 6000 2700 6050
 Wire Wire Line
-	2400 6350 2100 6350
+	2400 6000 2100 6000
 Wire Wire Line
-	2600 6350 2700 6350
-Wire Wire Line
-	2700 6350 3050 6350
-Wire Wire Line
-	3050 6350 3050 6100
-Wire Wire Line
-	3050 6100 3600 6100
-Connection ~ 2700 6350
+	2600 6000 2700 6000
+Connection ~ 2700 6000
 Wire Wire Line
 	3300 5400 3600 5400
 Wire Wire Line
@@ -1087,4 +1081,7 @@ Wire Wire Line
 	1450 5400 1800 5400
 Connection ~ 1450 5100
 Connection ~ 1450 4500
+Wire Wire Line
+	2700 6000 3600 6000
+NoConn ~ 3600 6100
 $EndSCHEMATC

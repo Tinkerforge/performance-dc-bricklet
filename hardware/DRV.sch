@@ -202,64 +202,21 @@ Wire Wire Line
 	2650 4550 3100 4550
 Text GLabel 2650 4550 0    50   Input ~ 0
 nSLEEP
-$Comp
-L tinkerforge:Rs R7
-U 1 1 5E8FA9AB
-P 1450 5050
-F 0 "R7" H 1503 5081 31  0000 L CNN
-F 1 "1k" H 1503 5019 31  0000 L CNN
-F 2 "kicad-libraries:R0603F" H 1450 5050 60  0001 C CNN
-F 3 "" H 1450 5050 60  0000 C CNN
-	1    1450 5050
-	1    0    0    -1  
-$EndComp
-$Comp
-L tinkerforge:Rs R8
-U 1 1 5E8FB676
-P 1750 5050
-F 0 "R8" H 1803 5081 31  0000 L CNN
-F 1 "1k" H 1803 5019 31  0000 L CNN
-F 2 "kicad-libraries:R0603F" H 1750 5050 60  0001 C CNN
-F 3 "" H 1750 5050 60  0000 C CNN
-	1    1750 5050
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1750 5150 1750 5350
-Wire Wire Line
-	1750 5350 1050 5350
-Connection ~ 1750 5350
 Text GLabel 1050 5250 0    50   Output ~ 0
 SNSOUT
 Text GLabel 1050 5350 0    50   Output ~ 0
 nFAULT
-Wire Wire Line
-	1750 4800 1750 4950
 $Comp
 L tinkerforge:+3.3VP #PWR010
 U 1 1 5E903516
-P 1600 4800
-F 0 "#PWR010" H 1750 4750 50  0001 C CNN
-F 1 "+3.3VP" H 1620 4943 50  0000 C CNN
-F 2 "" H 1600 4800 50  0001 C CNN
-F 3 "" H 1600 4800 50  0001 C CNN
-	1    1600 4800
+P 1600 4650
+F 0 "#PWR010" H 1750 4600 50  0001 C CNN
+F 1 "+3.3VP" H 1620 4793 50  0000 C CNN
+F 2 "" H 1600 4650 50  0001 C CNN
+F 3 "" H 1600 4650 50  0001 C CNN
+	1    1600 4650
 	1    0    0    -1  
 $EndComp
-Connection ~ 1600 4800
-Wire Wire Line
-	1600 4800 1750 4800
-Wire Wire Line
-	1050 5250 1450 5250
-Wire Wire Line
-	1450 4800 1450 4950
-Wire Wire Line
-	1450 4800 1600 4800
-Wire Wire Line
-	1450 5150 1450 5250
-Connection ~ 1450 5250
-Wire Wire Line
-	1450 5250 2850 5250
 Text GLabel 4700 4850 2    50   Output ~ 0
 SO
 Wire Wire Line
@@ -309,8 +266,6 @@ Wire Wire Line
 	3100 4950 2950 4950
 Wire Wire Line
 	2950 4950 2950 5350
-Wire Wire Line
-	1750 5350 2950 5350
 $Comp
 L tinkerforge:GND #PWR015
 U 1 1 5E9156B2
@@ -579,8 +534,6 @@ Wire Wire Line
 	4500 4750 5600 4750
 Wire Wire Line
 	5600 4750 5600 5600
-Wire Wire Line
-	5600 5600 5850 5600
 Wire Wire Line
 	6300 5600 6300 5550
 Wire Wire Line
@@ -1136,13 +1089,52 @@ Wire Wire Line
 Connection ~ 5750 1250
 Wire Wire Line
 	5750 1250 6050 1250
-Text GLabel 5750 5700 0    50   Input ~ 0
-SN
 Wire Wire Line
-	5750 5700 5850 5700
+	5600 5600 5900 5600
+Connection ~ 1600 4650
 Wire Wire Line
-	5850 5700 5850 5600
-Connection ~ 5850 5600
+	1450 4650 1550 4650
 Wire Wire Line
-	5850 5600 5900 5600
+	1600 4650 1650 4650
+$Comp
+L tinkerforge:R_PACK4 RP2
+U 1 1 5E9C9576
+P 1400 4950
+F 0 "RP2" V 1354 5378 50  0000 L CNN
+F 1 "1k" V 1445 5378 50  0000 L CNN
+F 2 "kicad-libraries:4X0603" H 1400 4950 50  0001 C CNN
+F 3 "" H 1400 4950 50  0000 C CNN
+	1    1400 4950
+	0    1    1    0   
+$EndComp
+NoConn ~ 1550 5150
+NoConn ~ 1650 5150
+Wire Wire Line
+	1450 4650 1450 4750
+Wire Wire Line
+	1750 4650 1750 4750
+Wire Wire Line
+	1050 5250 1750 5250
+Wire Wire Line
+	1050 5350 1450 5350
+Wire Wire Line
+	1750 5150 1750 5250
+Connection ~ 1750 5250
+Wire Wire Line
+	1750 5250 2850 5250
+Wire Wire Line
+	1450 5150 1450 5350
+Connection ~ 1450 5350
+Wire Wire Line
+	1450 5350 2950 5350
+Wire Wire Line
+	1550 4750 1550 4650
+Connection ~ 1550 4650
+Wire Wire Line
+	1550 4650 1600 4650
+Wire Wire Line
+	1650 4750 1650 4650
+Connection ~ 1650 4650
+Wire Wire Line
+	1650 4650 1750 4650
 $EndSCHEMATC
