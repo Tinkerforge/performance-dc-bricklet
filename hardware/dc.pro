@@ -1,6 +1,6 @@
-update=Mi 05 Feb 2020 11:42:04 CET
+update=Fr 24 Apr 2020 15:26:22 CEST
 version=1
-last_client=pcbnew
+last_client=kicad
 [general]
 version=1
 RootSch=
