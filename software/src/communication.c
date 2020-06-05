@@ -158,20 +158,24 @@ BootloaderHandleMessageResponse get_power_statistics(const GetPowerStatistics *d
 }
 
 BootloaderHandleMessageResponse set_gpio_configuration(const SetGPIOConfiguration *data) {
-	if(data->stop_deceleration > 0xFFFF) { // 16 bit
+	if(data->channel >= GPIO_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	gpio.debounce          = data->debounce;
-	gpio.stop_deceleration = data->stop_deceleration;
+	gpio.debounce[data->channel]          = data->debounce;
+	gpio.stop_deceleration[data->channel] = data->stop_deceleration;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_gpio_configuration(const GetGPIOConfiguration *data, GetGPIOConfiguration_Response *response) {
+	if(data->channel >= GPIO_CHANNEL_NUM) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
 	response->header.length = sizeof(GetGPIOConfiguration_Response);
-	response->debounce          = gpio.debounce;
-	response->stop_deceleration = gpio.stop_deceleration;
+	response->debounce          = gpio.debounce[data->channel];
+	response->stop_deceleration = gpio.stop_deceleration[data->channel];
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

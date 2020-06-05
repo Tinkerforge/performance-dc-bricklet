@@ -41,8 +41,8 @@ void communication_init(void);
 #define DC_V2_GPIO_ACTION_NONE 0
 #define DC_V2_GPIO_ACTION_NORMAL_STOP_RISING_EDGE 1
 #define DC_V2_GPIO_ACTION_NORMAL_STOP_FALLING_EDGE 2
-#define DC_V2_GPIO_ACTION_FULL_BREAK_RISING_EDGE 4
-#define DC_V2_GPIO_ACTION_FULL_BREAK_FALLING_EDGE 8
+#define DC_V2_GPIO_ACTION_FULL_BRAKE_RISING_EDGE 4
+#define DC_V2_GPIO_ACTION_FULL_BRAKE_FALLING_EDGE 8
 #define DC_V2_GPIO_ACTION_CALLBACK_RISING_EDGE 16
 #define DC_V2_GPIO_ACTION_CALLBACK_FALLING_EDGE 32
 
@@ -213,18 +213,20 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
+	uint8_t channel;
 	uint16_t debounce;
-	int32_t stop_deceleration;
+	uint16_t stop_deceleration;
 } __attribute__((__packed__)) SetGPIOConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
+	uint8_t channel;
 } __attribute__((__packed__)) GetGPIOConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint16_t debounce;
-	int32_t stop_deceleration;
+	uint16_t stop_deceleration;
 } __attribute__((__packed__)) GetGPIOConfiguration_Response;
 
 typedef struct {

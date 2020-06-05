@@ -23,6 +23,7 @@
 #include "configs/config_gpio.h"
 
 #include "communication.h"
+#include "drv8701.h"
 
 #include "bricklib2/hal/system_timer/system_timer.h"
 #include "bricklib2/logging/logging.h"
@@ -62,7 +63,7 @@ static inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".r
 	gpio.last_interrupt_value[channel] = value;
 
 	// Turn interrupt off if debounce is enabled
-	if(gpio.debounce != 0) {
+	if(gpio.debounce[channel] != 0) {
 		gpio.last_interrupt_time[channel]  = system_timer_get_ms();
 		NVIC_DisableIRQ(gpio_pins[channel].irq_n);
 		NVIC_ClearPendingIRQ(gpio_pins[channel].irq_n);
@@ -71,14 +72,20 @@ static inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".r
 	// TODO: handle callback here
 
 	// Check if action is necessary
-	if(value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BREAK_RISING_EDGE)) {
-		gpio.stop_emergency = true;
+	if(value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {
+		gpio.stop_emergency  = true;
+		drv8701.full_brake   = true;
 	} else if(value && (gpio.action[channel] & DC_V2_GPIO_ACTION_NORMAL_STOP_RISING_EDGE)) {
-		gpio.stop_normal    = true;
-	} else if(!value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BREAK_FALLING_EDGE)) {
-		gpio.stop_emergency = true;
+		gpio.stop_normal     = true;
+		drv8701.deceleration = gpio.stop_deceleration[channel];
+		drv8701.velocity     = 0;
+	} else if(!value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BRAKE_FALLING_EDGE)) {
+		gpio.stop_emergency  = true;
+		drv8701.full_brake   = true;
 	} else if(!value && (gpio.action[channel] & DC_V2_GPIO_ACTION_NORMAL_STOP_FALLING_EDGE)) {
-		gpio.stop_normal    = true;
+		gpio.stop_normal     = true;
+		drv8701.deceleration = gpio.stop_deceleration[channel];
+		drv8701.velocity     = 0;
 	}
 
 	// Set LED
@@ -110,8 +117,10 @@ void gpio_init(void) {
 
 	gpio.action[0]                        = DC_V2_GPIO_ACTION_NONE;
 	gpio.action[1]                        = DC_V2_GPIO_ACTION_NONE;
-	gpio.debounce                         = 50; // 50ms default
-	gpio.stop_deceleration                = 0xFFFF;
+	gpio.debounce[0]                      = 50; // 50ms default
+	gpio.debounce[1]                      = 50; // 50ms default
+	gpio.stop_deceleration[0]             = 0xFFFF;
+	gpio.stop_deceleration[1]             = 0xFFFF;
 	gpio.gpio_led_flicker_state[0].config = DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
 	gpio.gpio_led_flicker_state[1].config = DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
 
@@ -179,7 +188,7 @@ void gpio_tick(void) {
 	// Enable interrupt again after debounce time
 	for(uint8_t channel = 0; channel < GPIO_CHANNEL_NUM; channel++) {
 		if(gpio.last_interrupt_time[channel] != 0) {
-			if(system_timer_is_time_elapsed_ms(gpio.last_interrupt_time[channel], gpio.debounce)) {
+			if(system_timer_is_time_elapsed_ms(gpio.last_interrupt_time[channel], gpio.debounce[channel])) {
 				gpio.last_interrupt_time[channel] = 0;
 				NVIC_EnableIRQ(gpio_pins[channel].irq_n);
 			}

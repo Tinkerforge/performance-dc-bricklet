@@ -31,8 +31,8 @@
 #define GPIO_CHANNEL_NUM 2
 
 typedef struct {
-	uint16_t debounce;
-	int32_t stop_deceleration;
+	uint16_t debounce[GPIO_CHANNEL_NUM];
+	uint16_t stop_deceleration[GPIO_CHANNEL_NUM];
     uint32_t action[GPIO_CHANNEL_NUM];
 
 	uint32_t last_interrupt_time[GPIO_CHANNEL_NUM];
