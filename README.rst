@@ -1,5 +1,5 @@
-DC Bricklet
-================
+DC Bricklet 2.0
+===============
 
 **This Bricklet is currently in development.**
 
