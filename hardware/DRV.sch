@@ -39,16 +39,8 @@ F 3 "" H 10450 4250 60  0000 C CNN
 	1    10450 4250
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	8800 4050 8800 4350
-Wire Wire Line
-	9150 4050 9150 4150
 Connection ~ 9150 4150
-Wire Wire Line
-	9150 4150 9150 4450
 Connection ~ 8800 4350
-Wire Wire Line
-	8800 4350 8800 4450
 $Comp
 L tinkerforge:GND #PWR?
 U 1 1 5EB38AEE
@@ -666,61 +658,57 @@ Connection ~ 3800 3250
 Text Notes 10550 1600 0    50   ~ 0
 6-36V\n
 $Comp
-L tinkerforge:TVS D?
+L tinkerforge:D D?
 U 1 1 5EA57577
 P 8800 3800
 AR Path="/5EA57577" Ref="D?"  Part="1" 
 AR Path="/5EAFEC80/5EA57577" Ref="D3"  Part="1" 
-F 0 "D3" V 8600 3700 50  0000 L CNN
-F 1 "SMBJ36CA" H 8700 3700 31  0000 L CNN
-F 2 "kicad-libraries:SMB" H 8800 3800 50  0001 C CNN
+F 0 "D3" V 8650 3650 50  0000 L CNN
+F 1 "NTS12120EMFST1G" H 8600 3900 31  0000 L CNN
+F 2 "kicad-libraries:DFN5_5x6" H 8800 3800 50  0001 C CNN
 F 3 "" H 8800 3800 50  0000 C CNN
 	1    8800 3800
 	0    1    1    0   
 $EndComp
 $Comp
-L tinkerforge:TVS D?
+L tinkerforge:D D?
 U 1 1 5EA5C412
 P 9150 3800
 AR Path="/5EA5C412" Ref="D?"  Part="1" 
 AR Path="/5EAFEC80/5EA5C412" Ref="D5"  Part="1" 
-F 0 "D5" V 8950 3700 50  0000 L CNN
-F 1 "SMBJ36CA" H 9050 3700 31  0000 L CNN
-F 2 "kicad-libraries:SMB" H 9150 3800 50  0001 C CNN
+F 0 "D5" V 9000 3650 50  0000 L CNN
+F 1 "NTS12120EMFST1G" H 8950 3900 31  0000 L CNN
+F 2 "kicad-libraries:DFN5_5x6" H 9150 3800 50  0001 C CNN
 F 3 "" H 9150 3800 50  0000 C CNN
 	1    9150 3800
 	0    1    1    0   
 $EndComp
 $Comp
-L tinkerforge:TVS D?
+L tinkerforge:D D?
 U 1 1 5EA5C6B3
 P 8800 4700
 AR Path="/5EA5C6B3" Ref="D?"  Part="1" 
 AR Path="/5EAFEC80/5EA5C6B3" Ref="D4"  Part="1" 
-F 0 "D4" V 8600 4600 50  0000 L CNN
-F 1 "SMBJ36CA" H 8700 4600 31  0000 L CNN
-F 2 "kicad-libraries:SMB" H 8800 4700 50  0001 C CNN
+F 0 "D4" V 8650 4550 50  0000 L CNN
+F 1 "NTS12120EMFST1G" H 8600 4800 31  0000 L CNN
+F 2 "kicad-libraries:DFN5_5x6" H 8800 4700 50  0001 C CNN
 F 3 "" H 8800 4700 50  0000 C CNN
 	1    8800 4700
 	0    1    1    0   
 $EndComp
 $Comp
-L tinkerforge:TVS D?
+L tinkerforge:D D?
 U 1 1 5EA5CD9F
 P 9150 4700
 AR Path="/5EA5CD9F" Ref="D?"  Part="1" 
 AR Path="/5EAFEC80/5EA5CD9F" Ref="D7"  Part="1" 
-F 0 "D7" V 8950 4600 50  0000 L CNN
-F 1 "SMBJ36CA" H 9050 4600 31  0000 L CNN
-F 2 "kicad-libraries:SMB" H 9150 4700 50  0001 C CNN
+F 0 "D7" V 9000 4550 50  0000 L CNN
+F 1 "NTS12120EMFST1G" H 8950 4800 31  0000 L CNN
+F 2 "kicad-libraries:DFN5_5x6" H 9150 4700 50  0001 C CNN
 F 3 "" H 9150 4700 50  0000 C CNN
 	1    9150 4700
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	8800 4950 8800 5000
-Wire Wire Line
-	9150 4950 9150 5000
 Wire Wire Line
 	3800 1250 4200 1250
 Wire Wire Line
@@ -732,11 +720,7 @@ Wire Wire Line
 Wire Wire Line
 	8000 4150 9150 4150
 Wire Wire Line
-	8800 3550 8800 3400
-Wire Wire Line
 	8800 3400 8950 3400
-Wire Wire Line
-	9150 3400 9150 3550
 Wire Wire Line
 	8950 3400 8950 3000
 Connection ~ 8950 3400
@@ -1137,4 +1121,22 @@ Wire Wire Line
 Connection ~ 1650 4650
 Wire Wire Line
 	1650 4650 1750 4650
+Text Notes 4250 5700 0    118  ~ 0
+VREF Einstellen!
+Wire Wire Line
+	8800 3400 8800 3650
+Wire Wire Line
+	8800 3950 8800 4350
+Wire Wire Line
+	9150 3400 9150 3650
+Wire Wire Line
+	9150 3950 9150 4150
+Wire Wire Line
+	8800 4350 8800 4550
+Wire Wire Line
+	8800 4850 8800 5000
+Wire Wire Line
+	9150 4150 9150 4550
+Wire Wire Line
+	9150 4850 9150 5000
 $EndSCHEMATC
