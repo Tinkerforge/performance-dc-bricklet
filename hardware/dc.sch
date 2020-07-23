@@ -6,7 +6,7 @@ encoding utf-8
 Sheet 1 2
 Title "DC V2 Bricklet"
 Date "2020-01-09"
-Rev "2.0"
+Rev "2.1"
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
 Comment2 "Copyright (©) 2020, T.Schneidermann <tim@tinkerforge.com>"
