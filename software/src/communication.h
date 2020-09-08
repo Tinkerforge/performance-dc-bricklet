@@ -209,6 +209,7 @@ typedef struct {
 	TFPMessageHeader header;
 	uint16_t voltage;
 	uint16_t current;
+	int16_t temperature;
 } __attribute__((__packed__)) GetPowerStatistics_Response;
 
 typedef struct {

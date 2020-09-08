@@ -144,6 +144,23 @@ void voltage_init_adc(void) {
 		.alias_channel              =  VOLTAGE_VIN_ALIAS          // Channel is Aliased
 	};
 
+	XMC_VADC_CHANNEL_CONFIG_t  channel_temp_config = {
+		.input_class                =  XMC_VADC_CHANNEL_CONV_GLOBAL_CLASS0,    // Global ICLASS 0 selected
+		.lower_boundary_select 	    =  XMC_VADC_CHANNEL_BOUNDARY_GROUP_BOUND0,
+		.upper_boundary_select 	    =  XMC_VADC_CHANNEL_BOUNDARY_GROUP_BOUND0,
+		.event_gen_criteria         =  XMC_VADC_CHANNEL_EVGEN_NEVER,           // Channel Event disabled
+		.sync_conversion  		    =  0,                                      // Sync feature disabled
+		.alternate_reference        =  XMC_VADC_CHANNEL_REF_INTREF,            // Internal reference selected
+		.result_reg_number          =  VOLTAGE_TEMP_RESULT_REG,    // GxRES[10] selected
+		.use_global_result          =  0, 				                       // Use Group result register
+		.result_alignment           =  XMC_VADC_RESULT_ALIGN_RIGHT,            // Result alignment - Right Aligned
+		.broken_wire_detect_channel =  XMC_VADC_CHANNEL_BWDCH_VAGND,           // No Broken wire mode select
+		.broken_wire_detect		    =  0,    		                           // No Broken wire detection
+		.bfl                        =  0,                                      // No Boundary flag
+		.channel_priority           =  0,                   		           // Lowest Priority 0 selected
+		.alias_channel              =  VOLTAGE_TEMP_ALIAS          // Channel is Aliased
+	};
+
 	XMC_VADC_RESULT_CONFIG_t channel_result_config =
 	{
 		.data_reduction_control = 0b11,                         // Accumulate 4 result values
@@ -156,11 +173,11 @@ void voltage_init_adc(void) {
 
 	XMC_VADC_GLOBAL_Init(VADC, &adc_global_config);
 
-    XMC_VADC_GROUP_Init(VADC_G0, &group_init_handle0);
-    XMC_VADC_GROUP_SetPowerMode(VADC_G0, XMC_VADC_GROUP_POWERMODE_NORMAL);
+	XMC_VADC_GROUP_Init(VADC_G0, &group_init_handle0);
+	XMC_VADC_GROUP_SetPowerMode(VADC_G0, XMC_VADC_GROUP_POWERMODE_NORMAL);
 
-    XMC_VADC_GLOBAL_SHS_EnableAcceleratedMode(SHS0, XMC_VADC_GROUP_INDEX_0);
-    XMC_VADC_GLOBAL_SHS_SetAnalogReference(SHS0, XMC_VADC_GLOBAL_SHS_AREF_EXTERNAL_VDD_UPPER_RANGE);
+	XMC_VADC_GLOBAL_SHS_EnableAcceleratedMode(SHS0, XMC_VADC_GROUP_INDEX_0);
+	XMC_VADC_GLOBAL_SHS_SetAnalogReference(SHS0, XMC_VADC_GLOBAL_SHS_AREF_EXTERNAL_VDD_UPPER_RANGE);
 
 	XMC_VADC_GLOBAL_StartupCalibration(VADC);
 
@@ -173,16 +190,19 @@ void voltage_init_adc(void) {
 	// Initialize the global result register
 	XMC_VADC_GLOBAL_ResultInit(VADC, &adc_global_result_config);
 
-    /* Initialize for configured channels*/
-    XMC_VADC_GROUP_ChannelInit(VADC_G0, VOLTAGE_SO_CHANNEL_NUM, &channel_so_config);
-    XMC_VADC_GROUP_ChannelInit(VADC_G0, VOLTAGE_VIN_CHANNEL_NUM, &channel_vin_config);
+	// Initialize for configured channels
+	XMC_VADC_GROUP_ChannelInit(VADC_G0, VOLTAGE_SO_CHANNEL_NUM,   &channel_so_config);
+	XMC_VADC_GROUP_ChannelInit(VADC_G0, VOLTAGE_VIN_CHANNEL_NUM,  &channel_vin_config);
+	XMC_VADC_GROUP_ChannelInit(VADC_G0, VOLTAGE_TEMP_CHANNEL_NUM, &channel_temp_config);
 
-    /* Initialize for configured result registers */
-    XMC_VADC_GROUP_ResultInit(VADC_G0, channel_so_config.result_reg_number, &channel_result_config);
-    XMC_VADC_GROUP_ResultInit(VADC_G0, channel_vin_config.result_reg_number, &channel_result_config);
+	// Initialize for configured result registers
+	XMC_VADC_GROUP_ResultInit(VADC_G0, channel_so_config.result_reg_number,   &channel_result_config);
+	XMC_VADC_GROUP_ResultInit(VADC_G0, channel_vin_config.result_reg_number,  &channel_result_config);
+	XMC_VADC_GROUP_ResultInit(VADC_G0, channel_temp_config.result_reg_number, &channel_result_config);
 
 	XMC_VADC_GLOBAL_BackgroundAddChannelToSequence(VADC, 0, VOLTAGE_SO_CHANNEL_NUM);
 	XMC_VADC_GLOBAL_BackgroundAddChannelToSequence(VADC, 0, VOLTAGE_VIN_CHANNEL_NUM);
+	XMC_VADC_GLOBAL_BackgroundAddChannelToSequence(VADC, 0, VOLTAGE_TEMP_CHANNEL_NUM);
 
 	XMC_VADC_GLOBAL_BackgroundTriggerConversion(VADC);
 }
@@ -193,15 +213,17 @@ void voltage_init(void) {
 		.input_hysteresis = XMC_GPIO_INPUT_HYSTERESIS_STANDARD
 	};
 
-	XMC_GPIO_Init(VOLTAGE_VIN_PIN, &input_default_config);
-	XMC_GPIO_Init(VOLTAGE_SO_PIN,  &input_default_config);
+	XMC_GPIO_Init(VOLTAGE_VIN_PIN,  &input_default_config);
+	XMC_GPIO_Init(VOLTAGE_SO_PIN,   &input_default_config);
+	XMC_GPIO_Init(VOLTAGE_TEMP_PIN, &input_default_config);
 
 	voltage_init_adc();
 }
 
 void voltage_tick(void) {
-	const uint32_t result_vin = XMC_VADC_GROUP_GetDetailedResult(VADC_G0, VOLTAGE_VIN_RESULT_REG);
-	const uint32_t result_so  = XMC_VADC_GROUP_GetDetailedResult(VADC_G0, VOLTAGE_SO_RESULT_REG);
+	const uint32_t result_vin  = XMC_VADC_GROUP_GetDetailedResult(VADC_G0, VOLTAGE_VIN_RESULT_REG);
+	const uint32_t result_so   = XMC_VADC_GROUP_GetDetailedResult(VADC_G0, VOLTAGE_SO_RESULT_REG);
+	const uint32_t result_temp = XMC_VADC_GROUP_GetDetailedResult(VADC_G0, VOLTAGE_TEMP_RESULT_REG);
 
 
 	if((result_vin & (1 << 31))) {
@@ -212,6 +234,11 @@ void voltage_tick(void) {
 	if((result_so & (1 << 31))) {
 		voltage.adc_sum_so += (result_so & 0xFFFF);
 		voltage.adc_count_so++;
+	}
+
+	if((result_temp & (1 << 31))) {
+		voltage.adc_sum_temp += (result_temp & 0xFFFF);
+		voltage.adc_count_temp++;
 	}
 
 	if(system_timer_is_time_elapsed_ms(voltage.adc_last_time, 100)) {
@@ -234,11 +261,23 @@ void voltage_tick(void) {
 			voltage.current = (voltage.adc_sum_so*110)/(voltage.adc_count_so*191);
 		}
 
-		voltage.adc_count_vin = 0;
-		voltage.adc_count_so  = 0;
-		voltage.adc_sum_vin   = 0;
-		voltage.adc_sum_so    = 0;
+		// Temperature according to tmp235 datasheet 7.3, but we calculate on ADC values insteadof mV
+		// T_A    = (V_OUT – V_OFFS ) / T_C + T_INFL
+		// V_OUT  = ADC
+		// V_OFF  = 500/(3300/(4095*4)) = 2481.8181
+		// T_C    = 10/(3300/(4095*4))  = 49.6363
+		// T_INFL = 0
+		if(voltage.adc_count_temp != 0) {
+			voltage.temperature = (voltage.adc_sum_temp/((int32_t)voltage.adc_count_temp) - 2482)*100/496;
+		}
 
-		logd("Voltage: %dmV, Current,: %dmA\n\r", voltage.voltage, voltage.current);
+		voltage.adc_count_vin  = 0;
+		voltage.adc_count_so   = 0;
+		voltage.adc_count_temp = 0;
+		voltage.adc_sum_vin    = 0;
+		voltage.adc_sum_so     = 0;
+		voltage.adc_sum_temp   = 0;
+
+		logd("Voltage: %dmV, Current: %dmA, Temperature: %d\n\r", voltage.voltage, voltage.current, voltage.temperature);
 	}
 }

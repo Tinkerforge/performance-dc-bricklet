@@ -24,14 +24,19 @@
 
 #include "xmc_gpio.h"
 
-#define VOLTAGE_SO_PIN          P2_10
-#define VOLTAGE_SO_ALIAS        3
-#define VOLTAGE_SO_RESULT_REG   0
-#define VOLTAGE_SO_CHANNEL_NUM  0
+#define VOLTAGE_SO_PIN            P2_11
+#define VOLTAGE_SO_ALIAS          -1
+#define VOLTAGE_SO_RESULT_REG     10
+#define VOLTAGE_SO_CHANNEL_NUM    4
 
-#define VOLTAGE_VIN_PIN         P2_7
-#define VOLTAGE_VIN_ALIAS       -1
-#define VOLTAGE_VIN_RESULT_REG  1
-#define VOLTAGE_VIN_CHANNEL_NUM 1
+#define VOLTAGE_VIN_PIN           P2_7
+#define VOLTAGE_VIN_ALIAS         -1
+#define VOLTAGE_VIN_RESULT_REG    1
+#define VOLTAGE_VIN_CHANNEL_NUM   1
+
+#define VOLTAGE_TEMP_PIN          P2_10
+#define VOLTAGE_TEMP_ALIAS        3
+#define VOLTAGE_TEMP_RESULT_REG   0
+#define VOLTAGE_TEMP_CHANNEL_NUM  0
 
 #endif

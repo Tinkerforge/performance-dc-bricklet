@@ -153,6 +153,7 @@ BootloaderHandleMessageResponse get_power_statistics(const GetPowerStatistics *d
 	response->header.length = sizeof(GetPowerStatistics_Response);
 	response->voltage       = voltage.voltage;
 	response->current       = voltage.current;
+	response->temperature   = voltage.temperature;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

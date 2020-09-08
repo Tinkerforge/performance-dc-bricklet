@@ -27,12 +27,15 @@
 typedef struct {
     uint16_t voltage;
     uint16_t current;
+    int16_t  temperature;
 
     uint64_t adc_sum_so;
     uint64_t adc_sum_vin;
+    uint64_t adc_sum_temp;
 
     uint32_t adc_count_so;
     uint32_t adc_count_vin;
+    uint32_t adc_count_temp;
 
     uint32_t adc_last_time;
 } Voltage;
