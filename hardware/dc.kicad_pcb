@@ -1,4 +1,4 @@
-(kicad_pcb (version 20171130) (host pcbnew 5.1.6-c6e7f7d~87~ubuntu20.04.1)
+(kicad_pcb (version 20171130) (host pcbnew "(5.1.4)-1")
 
   (general
     (thickness 1.6)
@@ -3669,7 +3669,7 @@
   (gr_text + (at 67.1 178.8) (layer F.SilkS)
     (effects (font (size 2 2) (thickness 0.25)))
   )
-  (gr_text "Input\n6-45V" (at 65.05 172.3) (layer F.SilkS) (tstamp 5E3BF2D1)
+  (gr_text "Input\n6-36V" (at 65.05 172.3) (layer F.SilkS) (tstamp 5E3BF2D1)
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (gr_text GPIO1 (at 94.8 172.05) (layer F.SilkS)
