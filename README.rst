@@ -1,4 +1,4 @@
-DC Bricklet 2.0
+Performance DC Bricklet 1.0
 ===============
 
 **This Bricklet is currently in development.**
