@@ -370,7 +370,7 @@ L tinkerforge:Rs R18
 U 1 1 5E92C795
 P 5050 5200
 F 0 "R18" H 5100 5250 31  0000 L CNN
-F 1 "TBD" H 5100 5150 31  0000 L CNN
+F 1 "0" H 5100 5150 31  0000 L CNN
 F 2 "kicad-libraries:R0603F" H 5050 5200 60  0001 C CNN
 F 3 "" H 5050 5200 60  0000 C CNN
 	1    5050 5200
@@ -381,7 +381,7 @@ L tinkerforge:Rs R19
 U 1 1 5E92E39E
 P 5050 5500
 F 0 "R19" H 5103 5531 31  0000 L CNN
-F 1 "TBD" H 5103 5469 31  0000 L CNN
+F 1 "DNP" H 5103 5469 31  0000 L CNN
 F 2 "kicad-libraries:R0603F" H 5050 5500 60  0001 C CNN
 F 3 "" H 5050 5500 60  0000 C CNN
 	1    5050 5500
@@ -1121,8 +1121,6 @@ Wire Wire Line
 Connection ~ 1650 4650
 Wire Wire Line
 	1650 4650 1750 4650
-Text Notes 4250 5700 0    118  ~ 0
-VREF Einstellen!
 Wire Wire Line
 	8800 3400 8800 3650
 Wire Wire Line
@@ -1139,4 +1137,6 @@ Wire Wire Line
 	9150 4150 9150 4550
 Wire Wire Line
 	9150 4850 9150 5000
+Text Notes 550  7700 0    50   ~ 0
+Copyright Tinkerforge GmbH 2020.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions\n
 $EndSCHEMATC
