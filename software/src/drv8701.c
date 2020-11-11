@@ -67,9 +67,9 @@ void drv8701_init(void) {
 	ccu4_pwm_init(DRV8701_IN1_PIN, DRV8701_IN1_SLICE, 3200 - 1);
 	ccu4_pwm_init(DRV8701_IN2_PIN, DRV8701_IN2_SLICE, 3200 - 1);
 
-	drv8701.cw_led_flicker_state.config    = DC_V2_CW_LED_CONFIG_SHOW_CW_AS_FORWARD;
-	drv8701.ccw_led_flicker_state.config   = DC_V2_CCW_LED_CONFIG_SHOW_CCW_AS_BACKWARD;
-	drv8701.error_led_flicker_state.config = DC_V2_ERROR_LED_CONFIG_SHOW_ERROR;
+	drv8701.cw_led_flicker_state.config    = PERFORMANCE_DC_CW_LED_CONFIG_SHOW_CW_AS_FORWARD;
+	drv8701.ccw_led_flicker_state.config   = PERFORMANCE_DC_CCW_LED_CONFIG_SHOW_CCW_AS_BACKWARD;
+	drv8701.error_led_flicker_state.config = PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_ERROR;
 
 	drv8701.acceleration  = 10000;
 	drv8701.deceleration  = 10000;
@@ -79,13 +79,13 @@ void drv8701_init(void) {
 static void drv8701_handle_error_led(const uint32_t t) {
 	static uint32_t last_time = 0;
 
-	if(drv8701.error_led_flicker_state.config == DC_V2_ERROR_LED_CONFIG_SHOW_HEARTBEAT) {
+	if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_HEARTBEAT) {
 		led_flicker_tick(&drv8701.error_led_flicker_state, t, DRV8701_LED_ERROR_PIN);
-	} else if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_ON) {
+	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_ON) {
 		XMC_GPIO_SetOutputLow(DRV8701_LED_ERROR_PIN);
-	} else if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_OFF) {
+	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_OFF) {
 		XMC_GPIO_SetOutputHigh(DRV8701_LED_ERROR_PIN);
-	} else if(drv8701.error_led_flicker_state.config == DC_V2_ERROR_LED_CONFIG_SHOW_ERROR) {
+	} else if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_ERROR) {
 		uint32_t error = 0;
 		if(voltage.voltage < 6000) {
 			error = 500;
@@ -109,12 +109,12 @@ static void drv8701_handle_error_led(const uint32_t t) {
 static void drv8701_handle_cw_led(const uint32_t t) {
 	bool led_on = false;
 
-	if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_SHOW_HEARTBEAT) {
+	if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_SHOW_HEARTBEAT) {
 		led_flicker_tick(&drv8701.cw_led_flicker_state, t, DRV8701_LED_CW_PIN);
 		return;
-	} else if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_ON) {
+	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_ON) {
 		led_on = true;
-	} else if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_OFF) {
+	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_OFF) {
 		led_on = false;
 	} else if(!drv8701.enabled) {
 		led_on = false;
@@ -122,13 +122,13 @@ static void drv8701_handle_cw_led(const uint32_t t) {
 		if(drv8701.velocity == 0) {
 			led_on = false;
 		} else if(drv8701.velocity < 0) {
-			if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_SHOW_CW_AS_FORWARD) {
+			if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_SHOW_CW_AS_FORWARD) {
 				led_on = false;
 			} else {
 				led_on = true;
 			}
 		} else {
-			if(drv8701.cw_led_flicker_state.config == DC_V2_CW_LED_CONFIG_SHOW_CW_AS_FORWARD) {
+			if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_SHOW_CW_AS_FORWARD) {
 				led_on = true;
 			} else {
 				led_on = false;
@@ -146,12 +146,12 @@ static void drv8701_handle_cw_led(const uint32_t t) {
 static void drv8701_handle_ccw_led(const uint32_t t) {
 	bool led_on = false;
 
-	if(drv8701.ccw_led_flicker_state.config == DC_V2_CCW_LED_CONFIG_SHOW_HEARTBEAT) {
+	if(drv8701.ccw_led_flicker_state.config == PERFORMANCE_DC_CCW_LED_CONFIG_SHOW_HEARTBEAT) {
 		led_flicker_tick(&drv8701.ccw_led_flicker_state, t, DRV8701_LED_CCW_PIN);
 		return;
-	} else if(drv8701.ccw_led_flicker_state.config == DC_V2_CCW_LED_CONFIG_ON) {
+	} else if(drv8701.ccw_led_flicker_state.config == PERFORMANCE_DC_CCW_LED_CONFIG_ON) {
 		led_on = true;
-	} else if(drv8701.ccw_led_flicker_state.config == DC_V2_CCW_LED_CONFIG_OFF) {
+	} else if(drv8701.ccw_led_flicker_state.config == PERFORMANCE_DC_CCW_LED_CONFIG_OFF) {
 		led_on = false;
 	} else if(!drv8701.enabled) {
 		led_on = false;
@@ -159,13 +159,13 @@ static void drv8701_handle_ccw_led(const uint32_t t) {
 		if(drv8701.velocity == 0) {
 			led_on = false;
 		} else if(drv8701.velocity < 0) {
-			if(drv8701.ccw_led_flicker_state.config == DC_V2_CCW_LED_CONFIG_SHOW_CCW_AS_FORWARD) {
+			if(drv8701.ccw_led_flicker_state.config == PERFORMANCE_DC_CCW_LED_CONFIG_SHOW_CCW_AS_FORWARD) {
 				led_on = false;
 			} else {
 				led_on = true;
 			}
 		} else {
-			if(drv8701.ccw_led_flicker_state.config == DC_V2_CCW_LED_CONFIG_SHOW_CCW_AS_FORWARD) {
+			if(drv8701.ccw_led_flicker_state.config == PERFORMANCE_DC_CCW_LED_CONFIG_SHOW_CCW_AS_FORWARD) {
 				led_on = true;
 			} else {
 				led_on = false;
@@ -260,7 +260,7 @@ void drv8701_tick(void) {
 		drv8701.velocity = 0;
 		drv8701.velocity_current_high_res = 0;
 	} else {
-		if(drv8701.drive_mode == DC_V2_DRIVE_MODE_DRIVE_BRAKE) { // drive/brake
+		if(drv8701.drive_mode == PERFORMANCE_DC_DRIVE_MODE_DRIVE_BRAKE) { // drive/brake
 			if(new_velocity == 0) {
 				ccu4_pwm_set_duty_cycle(DRV8701_IN1_SLICE, drv8701.max_duty_cycle);
 				ccu4_pwm_set_duty_cycle(DRV8701_IN2_SLICE, drv8701.max_duty_cycle);

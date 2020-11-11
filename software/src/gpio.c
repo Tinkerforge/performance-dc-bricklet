@@ -72,30 +72,30 @@ static inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".r
 	// TODO: handle callback here
 
 	// Check if action is necessary
-	if(value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {
+	if(value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {
 		gpio.stop_emergency  = true;
 		drv8701.full_brake   = true;
-	} else if(value && (gpio.action[channel] & DC_V2_GPIO_ACTION_NORMAL_STOP_RISING_EDGE)) {
+	} else if(value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_NORMAL_STOP_RISING_EDGE)) {
 		gpio.stop_normal     = true;
 		drv8701.deceleration = gpio.stop_deceleration[channel];
 		drv8701.velocity     = 0;
-	} else if(!value && (gpio.action[channel] & DC_V2_GPIO_ACTION_FULL_BRAKE_FALLING_EDGE)) {
+	} else if(!value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_FULL_BRAKE_FALLING_EDGE)) {
 		gpio.stop_emergency  = true;
 		drv8701.full_brake   = true;
-	} else if(!value && (gpio.action[channel] & DC_V2_GPIO_ACTION_NORMAL_STOP_FALLING_EDGE)) {
+	} else if(!value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_NORMAL_STOP_FALLING_EDGE)) {
 		gpio.stop_normal     = true;
 		drv8701.deceleration = gpio.stop_deceleration[channel];
 		drv8701.velocity     = 0;
 	}
 
 	// Set LED
-	if(gpio.gpio_led_flicker_state[channel].config == DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH) {
+	if(gpio.gpio_led_flicker_state[channel].config == PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH) {
 		if(value) {
 			XMC_GPIO_SetOutputLow(gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
 		} else {
 			XMC_GPIO_SetOutputHigh(gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
 		}
-	} else if(gpio.gpio_led_flicker_state[channel].config == DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW) {
+	} else if(gpio.gpio_led_flicker_state[channel].config == PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW) {
 		if(value) {
 			XMC_GPIO_SetOutputHigh(gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
 		} else {
@@ -115,14 +115,14 @@ void __attribute__((optimize("-O3"))) __attribute__ ((section (".ram_code"))) gp
 void gpio_init(void) {
     memset(&gpio, 0, sizeof(GPIO));
 
-	gpio.action[0]                        = DC_V2_GPIO_ACTION_NONE;
-	gpio.action[1]                        = DC_V2_GPIO_ACTION_NONE;
+	gpio.action[0]                        = PERFORMANCE_DC_GPIO_ACTION_NONE;
+	gpio.action[1]                        = PERFORMANCE_DC_GPIO_ACTION_NONE;
 	gpio.debounce[0]                      = 50; // 50ms default
 	gpio.debounce[1]                      = 50; // 50ms default
 	gpio.stop_deceleration[0]             = 0xFFFF;
 	gpio.stop_deceleration[1]             = 0xFFFF;
-	gpio.gpio_led_flicker_state[0].config = DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
-	gpio.gpio_led_flicker_state[1].config = DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
+	gpio.gpio_led_flicker_state[0].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
+	gpio.gpio_led_flicker_state[1].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
 
 
 	// Init GPIO IRQs
