@@ -101,20 +101,31 @@ void communication_init(void);
 #define FID_SET_PWM_FREQUENCY 11
 #define FID_GET_PWM_FREQUENCY 12
 #define FID_GET_POWER_STATISTICS 13
-#define FID_SET_GPIO_CONFIGURATION 14
-#define FID_GET_GPIO_CONFIGURATION 15
-#define FID_SET_GPIO_ACTION 16
-#define FID_GET_GPIO_ACTION 17
-#define FID_GET_GPIO_STATE 18
-#define FID_SET_ERROR_LED_CONFIG 19
-#define FID_GET_ERROR_LED_CONFIG 20
-#define FID_SET_CW_LED_CONFIG 21
-#define FID_GET_CW_LED_CONFIG 22
-#define FID_SET_CCW_LED_CONFIG 23
-#define FID_GET_CCW_LED_CONFIG 24
-#define FID_SET_GPIO_LED_CONFIG 25
-#define FID_GET_GPIO_LED_CONFIG 26
+#define FID_SET_THERMAL_SHUTDOWN 14
+#define FID_GET_THERMAL_SHUTDOWN 15
+#define FID_SET_GPIO_CONFIGURATION 16
+#define FID_GET_GPIO_CONFIGURATION 17
+#define FID_SET_GPIO_ACTION 18
+#define FID_GET_GPIO_ACTION 19
+#define FID_GET_GPIO_STATE 20
+#define FID_SET_ERROR_LED_CONFIG 21
+#define FID_GET_ERROR_LED_CONFIG 22
+#define FID_SET_CW_LED_CONFIG 23
+#define FID_GET_CW_LED_CONFIG 24
+#define FID_SET_CCW_LED_CONFIG 25
+#define FID_GET_CCW_LED_CONFIG 26
+#define FID_SET_GPIO_LED_CONFIG 27
+#define FID_GET_GPIO_LED_CONFIG 28
+#define FID_SET_EMERGENCY_SHUTDOWN_CALLBACK_CONFIGURATION 29
+#define FID_GET_EMERGENCY_SHUTDOWN_CALLBACK_CONFIGURATION 30
+#define FID_SET_VELOCITY_REACHED_CALLBACK_CONFIGURATION 31
+#define FID_GET_VELOCITY_REACHED_CALLBACK_CONFIGURATION 32
+#define FID_SET_CURRENT_VELOCITY_CALLBACK_CONFIGURATION 33
+#define FID_GET_CURRENT_VELOCITY_CALLBACK_CONFIGURATION 34
 
+#define FID_CALLBACK_EMERGENCY_SHUTDOWN 35
+#define FID_CALLBACK_VELOCITY_REACHED 36
+#define FID_CALLBACK_CURRENT_VELOCITY 37
 
 typedef struct {
 	TFPMessageHeader header;
@@ -211,6 +222,20 @@ typedef struct {
 	uint16_t current;
 	int16_t temperature;
 } __attribute__((__packed__)) GetPowerStatistics_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t temperature;
+} __attribute__((__packed__)) SetThermalShutdown;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetThermalShutdown;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t temperature;
+} __attribute__((__packed__)) GetThermalShutdown_Response;
 
 typedef struct {
 	TFPMessageHeader header;
@@ -313,6 +338,64 @@ typedef struct {
 	uint8_t config;
 } __attribute__((__packed__)) GetGPIOLEDConfig_Response;
 
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) SetEmergencyShutdownCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetEmergencyShutdownCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) GetEmergencyShutdownCallbackConfiguration_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) SetVelocityReachedCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetVelocityReachedCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool enabled;
+} __attribute__((__packed__)) GetVelocityReachedCallbackConfiguration_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t period;
+	bool value_has_to_change;
+} __attribute__((__packed__)) SetCurrentVelocityCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetCurrentVelocityCallbackConfiguration;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t period;
+	bool value_has_to_change;
+} __attribute__((__packed__)) GetCurrentVelocityCallbackConfiguration_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) EmergencyShutdown_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
+	int16_t velocity;
+} __attribute__((__packed__)) VelocityReached_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
+	int16_t velocity;
+} __attribute__((__packed__)) CurrentVelocity_Callback;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_enabled(const SetEnabled *data);
@@ -328,6 +411,8 @@ BootloaderHandleMessageResponse get_drive_mode(const GetDriveMode *data, GetDriv
 BootloaderHandleMessageResponse set_pwm_frequency(const SetPWMFrequency *data);
 BootloaderHandleMessageResponse get_pwm_frequency(const GetPWMFrequency *data, GetPWMFrequency_Response *response);
 BootloaderHandleMessageResponse get_power_statistics(const GetPowerStatistics *data, GetPowerStatistics_Response *response);
+BootloaderHandleMessageResponse set_thermal_shutdown(const SetThermalShutdown *data);
+BootloaderHandleMessageResponse get_thermal_shutdown(const GetThermalShutdown *data, GetThermalShutdown_Response *response);
 BootloaderHandleMessageResponse set_gpio_configuration(const SetGPIOConfiguration *data);
 BootloaderHandleMessageResponse get_gpio_configuration(const GetGPIOConfiguration *data, GetGPIOConfiguration_Response *response);
 BootloaderHandleMessageResponse set_gpio_action(const SetGPIOAction *data);
@@ -341,13 +426,24 @@ BootloaderHandleMessageResponse set_ccw_led_config(const SetCCWLEDConfig *data);
 BootloaderHandleMessageResponse get_ccw_led_config(const GetCCWLEDConfig *data, GetCCWLEDConfig_Response *response);
 BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data);
 BootloaderHandleMessageResponse get_gpio_led_config(const GetGPIOLEDConfig *data, GetGPIOLEDConfig_Response *response);
+BootloaderHandleMessageResponse set_emergency_shutdown_callback_configuration(const SetEmergencyShutdownCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_emergency_shutdown_callback_configuration(const GetEmergencyShutdownCallbackConfiguration *data, GetEmergencyShutdownCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse set_velocity_reached_callback_configuration(const SetVelocityReachedCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_velocity_reached_callback_configuration(const GetVelocityReachedCallbackConfiguration *data, GetVelocityReachedCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse set_current_velocity_callback_configuration(const SetCurrentVelocityCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_current_velocity_callback_configuration(const GetCurrentVelocityCallbackConfiguration *data, GetCurrentVelocityCallbackConfiguration_Response *response);
 
 // Callbacks
-
+bool handle_emergency_shutdown_callback(void);
+bool handle_velocity_reached_callback(void);
+bool handle_current_velocity_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 0
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 3
 #define COMMUNICATION_CALLBACK_LIST_INIT \
+	handle_emergency_shutdown_callback, \
+	handle_velocity_reached_callback, \
+	handle_current_velocity_callback, \
 
 
 #endif

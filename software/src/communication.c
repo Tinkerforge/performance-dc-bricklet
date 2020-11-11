@@ -46,6 +46,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_SET_PWM_FREQUENCY: return set_pwm_frequency(message);
 		case FID_GET_PWM_FREQUENCY: return get_pwm_frequency(message, response);
 		case FID_GET_POWER_STATISTICS: return get_power_statistics(message, response);
+		case FID_SET_THERMAL_SHUTDOWN: return set_thermal_shutdown(message);
+		case FID_GET_THERMAL_SHUTDOWN: return get_thermal_shutdown(message, response);
 		case FID_SET_GPIO_CONFIGURATION: return set_gpio_configuration(message);
 		case FID_GET_GPIO_CONFIGURATION: return get_gpio_configuration(message, response);
 		case FID_SET_GPIO_ACTION: return set_gpio_action(message);
@@ -59,6 +61,12 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_CCW_LED_CONFIG: return get_ccw_led_config(message, response);
 		case FID_SET_GPIO_LED_CONFIG: return set_gpio_led_config(message);
 		case FID_GET_GPIO_LED_CONFIG: return get_gpio_led_config(message, response);
+		case FID_SET_EMERGENCY_SHUTDOWN_CALLBACK_CONFIGURATION: return set_emergency_shutdown_callback_configuration(message);
+		case FID_GET_EMERGENCY_SHUTDOWN_CALLBACK_CONFIGURATION: return get_emergency_shutdown_callback_configuration(message, response);
+		case FID_SET_VELOCITY_REACHED_CALLBACK_CONFIGURATION: return set_velocity_reached_callback_configuration(message);
+		case FID_GET_VELOCITY_REACHED_CALLBACK_CONFIGURATION: return get_velocity_reached_callback_configuration(message, response);
+		case FID_SET_CURRENT_VELOCITY_CALLBACK_CONFIGURATION: return set_current_velocity_callback_configuration(message);
+		case FID_GET_CURRENT_VELOCITY_CALLBACK_CONFIGURATION: return get_current_velocity_callback_configuration(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -154,6 +162,17 @@ BootloaderHandleMessageResponse get_power_statistics(const GetPowerStatistics *d
 	response->voltage       = voltage.voltage;
 	response->current       = voltage.current;
 	response->temperature   = voltage.temperature;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_thermal_shutdown(const SetThermalShutdown *data) {
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_thermal_shutdown(const GetThermalShutdown *data, GetThermalShutdown_Response *response) {
+	response->header.length = sizeof(GetThermalShutdown_Response);
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -368,7 +387,105 @@ BootloaderHandleMessageResponse get_gpio_led_config(const GetGPIOLEDConfig *data
 }
 
 
+BootloaderHandleMessageResponse set_emergency_shutdown_callback_configuration(const SetEmergencyShutdownCallbackConfiguration *data) {
 
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_emergency_shutdown_callback_configuration(const GetEmergencyShutdownCallbackConfiguration *data, GetEmergencyShutdownCallbackConfiguration_Response *response) {
+	response->header.length = sizeof(GetEmergencyShutdownCallbackConfiguration_Response);
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_velocity_reached_callback_configuration(const SetVelocityReachedCallbackConfiguration *data) {
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_velocity_reached_callback_configuration(const GetVelocityReachedCallbackConfiguration *data, GetVelocityReachedCallbackConfiguration_Response *response) {
+	response->header.length = sizeof(GetVelocityReachedCallbackConfiguration_Response);
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_current_velocity_callback_configuration(const SetCurrentVelocityCallbackConfiguration *data) {
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_current_velocity_callback_configuration(const GetCurrentVelocityCallbackConfiguration *data, GetCurrentVelocityCallbackConfiguration_Response *response) {
+	response->header.length = sizeof(GetCurrentVelocityCallbackConfiguration_Response);
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+
+bool handle_emergency_shutdown_callback(void) {
+	static bool is_buffered = false;
+	static EmergencyShutdown_Callback cb;
+
+	if(!is_buffered) {
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(EmergencyShutdown_Callback), FID_CALLBACK_EMERGENCY_SHUTDOWN);
+		// TODO: Implement EmergencyShutdown callback handling
+
+		return false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(EmergencyShutdown_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
+bool handle_velocity_reached_callback(void) {
+	static bool is_buffered = false;
+	static VelocityReached_Callback cb;
+
+	if(!is_buffered) {
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(VelocityReached_Callback), FID_CALLBACK_VELOCITY_REACHED);
+		// TODO: Implement VelocityReached callback handling
+
+		return false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(VelocityReached_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
+bool handle_current_velocity_callback(void) {
+	static bool is_buffered = false;
+	static CurrentVelocity_Callback cb;
+
+	if(!is_buffered) {
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(CurrentVelocity_Callback), FID_CALLBACK_CURRENT_VELOCITY);
+		// TODO: Implement CurrentVelocity callback handling
+
+		return false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(CurrentVelocity_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
 
 
 void communication_tick(void) {
