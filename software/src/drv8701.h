@@ -1,4 +1,4 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * drv8701.h: Driver for DRV8701

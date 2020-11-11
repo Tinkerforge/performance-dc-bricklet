@@ -1,7 +1,7 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
- * voltage.c: Driver for DC Bricklet 2.0 voltage measurements
+ * voltage.c: Driver for Performance DC Bricklet voltage measurements
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

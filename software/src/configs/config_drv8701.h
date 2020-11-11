@@ -1,4 +1,4 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_drv8701.h: Config for DRV8701 driver
@@ -24,6 +24,7 @@
 
 #include "xmc_gpio.h"
 
+// We use DRV8701P witn IN1/IN2 instead of PH/EN!
 #define DRV8701_IN1_PIN         P0_8
 #define DRV8701_IN2_PIN         P0_7
 #define DRV8701_NSLEEP_PIN      P0_6

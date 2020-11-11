@@ -1,4 +1,4 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
@@ -120,7 +120,7 @@ BootloaderHandleMessageResponse full_brake(const FullBrake *data) {
 }
 
 BootloaderHandleMessageResponse set_drive_mode(const SetDriveMode *data) {
-	if(data->mode > DC_V2_DRIVE_MODE_DRIVE_COAST) {
+	if(data->mode > PERFORMANCE_DC_DRIVE_MODE_DRIVE_COAST) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
@@ -210,17 +210,17 @@ BootloaderHandleMessageResponse get_gpio_state(const GetGPIOState *data, GetGPIO
 }
 
 BootloaderHandleMessageResponse set_error_led_config(const SetErrorLEDConfig *data) {
-	if(data->config > DC_V2_ERROR_LED_CONFIG_SHOW_ERROR) {
+	if(data->config > PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_ERROR) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
 	drv8701.error_led_flicker_state.config = data->config;
 	switch(data->config) {
-		case DC_V2_ERROR_LED_CONFIG_OFF:
+		case PERFORMANCE_DC_ERROR_LED_CONFIG_OFF:
 			XMC_GPIO_SetOutputHigh(DRV8701_LED_ERROR_PIN);
 			break;
 
-		case DC_V2_ERROR_LED_CONFIG_ON:
+		case PERFORMANCE_DC_ERROR_LED_CONFIG_ON:
 			XMC_GPIO_SetOutputLow(DRV8701_LED_ERROR_PIN);
 			break;
 
@@ -237,17 +237,17 @@ BootloaderHandleMessageResponse get_error_led_config(const GetErrorLEDConfig *da
 }
 
 BootloaderHandleMessageResponse set_cw_led_config(const SetCWLEDConfig *data) {
-	if(data->config > DC_V2_CW_LED_CONFIG_SHOW_CW_AS_BACKWARD) {
+	if(data->config > PERFORMANCE_DC_CW_LED_CONFIG_SHOW_CW_AS_BACKWARD) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
 	drv8701.cw_led_flicker_state.config = data->config;
 	switch(data->config) {
-		case DC_V2_CW_LED_CONFIG_OFF:
+		case PERFORMANCE_DC_CW_LED_CONFIG_OFF:
 			XMC_GPIO_SetOutputHigh(DRV8701_LED_CW_PIN);
 			break;
 
-		case DC_V2_CW_LED_CONFIG_ON:
+		case PERFORMANCE_DC_CW_LED_CONFIG_ON:
 			XMC_GPIO_SetOutputLow(DRV8701_LED_CW_PIN);
 			break;
 
@@ -265,17 +265,17 @@ BootloaderHandleMessageResponse get_cw_led_config(const GetCWLEDConfig *data, Ge
 }
 
 BootloaderHandleMessageResponse set_ccw_led_config(const SetCCWLEDConfig *data) {
-	if(data->config > DC_V2_CCW_LED_CONFIG_SHOW_CCW_AS_BACKWARD) {
+	if(data->config > PERFORMANCE_DC_CCW_LED_CONFIG_SHOW_CCW_AS_BACKWARD) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
 	drv8701.ccw_led_flicker_state.config = data->config;
 	switch(data->config) {
-		case DC_V2_CCW_LED_CONFIG_OFF:
+		case PERFORMANCE_DC_CCW_LED_CONFIG_OFF:
 			XMC_GPIO_SetOutputHigh(DRV8701_LED_CCW_PIN);
 			break;
 
-		case DC_V2_CCW_LED_CONFIG_ON:
+		case PERFORMANCE_DC_CCW_LED_CONFIG_ON:
 			XMC_GPIO_SetOutputLow(DRV8701_LED_CCW_PIN);
 			break;
 
@@ -292,7 +292,7 @@ BootloaderHandleMessageResponse get_ccw_led_config(const GetCCWLEDConfig *data, 
 }
 
 BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data) {
-	if(data->config > DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW) {
+	if(data->config > PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
@@ -302,7 +302,7 @@ BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data
 
 	gpio.gpio_led_flicker_state[data->channel].config = data->config;
 	switch(data->config) {
-		case DC_V2_GPIO_LED_CONFIG_OFF:
+		case PERFORMANCE_DC_GPIO_LED_CONFIG_OFF:
 			if(data->channel == 0) {
 				XMC_GPIO_SetOutputHigh(GPIO_0_LED_PIN);
 			} else {
@@ -310,7 +310,7 @@ BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data
 			}
 			break;
 
-		case DC_V2_GPIO_LED_CONFIG_ON:
+		case PERFORMANCE_DC_GPIO_LED_CONFIG_ON:
 			if(data->channel == 0) {
 				XMC_GPIO_SetOutputLow(GPIO_0_LED_PIN);
 			} else {
@@ -318,7 +318,7 @@ BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data
 			}
 			break;
 
-		case DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH:
+		case PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH:
 			if(data->channel == 0) {
 				if(gpio.last_interrupt_value[0])	{
 					XMC_GPIO_SetOutputLow(GPIO_0_LED_PIN);
@@ -334,7 +334,7 @@ BootloaderHandleMessageResponse set_gpio_led_config(const SetGPIOLEDConfig *data
 			}
 			break;
 
-		case DC_V2_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW:
+		case PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW:
 			if(data->channel == 0) {
 				if(gpio.last_interrupt_value[0])	{
 					XMC_GPIO_SetOutputHigh(GPIO_0_LED_PIN);

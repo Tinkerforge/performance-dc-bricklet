@@ -1,7 +1,7 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
- * gpio.h: Driver for DC Bricklet 2.0 GPIO
+ * gpio.h: Driver for Performance DC Bricklet GPIO
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

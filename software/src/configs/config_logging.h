@@ -1,7 +1,7 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
  *
- * config_logging.h: Logging configuration for DC Bricklet 2.0
+ * config_logging.h: Logging configuration for Performance DC Bricklet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

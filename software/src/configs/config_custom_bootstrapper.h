@@ -1,8 +1,8 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_custom_bootstrapper.h: XMC bootstrapper configurations for
- *                               DC Bricklet 2.0
+ *                               Performance DC Bricklet
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

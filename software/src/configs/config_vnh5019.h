@@ -1,4 +1,4 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_vnh5019.h: Config for VNH5019 driver

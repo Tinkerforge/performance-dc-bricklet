@@ -1,4 +1,4 @@
-/* dc-v2-bricklet
+/* performance-dc-bricklet
  * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config_voltage.h: Config for DRV8701 voltage measurements
