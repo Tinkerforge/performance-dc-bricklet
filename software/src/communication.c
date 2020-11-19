@@ -23,6 +23,7 @@
 
 #include "bricklib2/utility/communication_callback.h"
 #include "bricklib2/protocols/tfp/tfp.h"
+#include "bricklib2/hal/system_timer/system_timer.h"
 
 #include "drv8701.h"
 #include "configs/config_drv8701.h"
@@ -167,12 +168,14 @@ BootloaderHandleMessageResponse get_power_statistics(const GetPowerStatistics *d
 }
 
 BootloaderHandleMessageResponse set_thermal_shutdown(const SetThermalShutdown *data) {
+	drv8701.thermal_shutdown_temperature = data->temperature;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_thermal_shutdown(const GetThermalShutdown *data, GetThermalShutdown_Response *response) {
 	response->header.length = sizeof(GetThermalShutdown_Response);
+	response->temperature   = drv8701.thermal_shutdown_temperature;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -388,34 +391,44 @@ BootloaderHandleMessageResponse get_gpio_led_config(const GetGPIOLEDConfig *data
 
 
 BootloaderHandleMessageResponse set_emergency_shutdown_callback_configuration(const SetEmergencyShutdownCallbackConfiguration *data) {
+	drv8701.cb_emergency_shutdown_enabled = data->enabled;
+	drv8701.thermal_shutdown              = false;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_emergency_shutdown_callback_configuration(const GetEmergencyShutdownCallbackConfiguration *data, GetEmergencyShutdownCallbackConfiguration_Response *response) {
 	response->header.length = sizeof(GetEmergencyShutdownCallbackConfiguration_Response);
+	response->enabled       = drv8701.cb_emergency_shutdown_enabled;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_velocity_reached_callback_configuration(const SetVelocityReachedCallbackConfiguration *data) {
+	drv8701.cb_velocity_reached_enabled = data->enabled;
+	drv8701.velocity_reached            = false;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_velocity_reached_callback_configuration(const GetVelocityReachedCallbackConfiguration *data, GetVelocityReachedCallbackConfiguration_Response *response) {
 	response->header.length = sizeof(GetVelocityReachedCallbackConfiguration_Response);
+	response->enabled       = drv8701.cb_velocity_reached_enabled;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_current_velocity_callback_configuration(const SetCurrentVelocityCallbackConfiguration *data) {
+	drv8701.cb_curent_velocity_period               = data->period;
+	drv8701.cb_current_velocity_value_has_to_change = data->value_has_to_change;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_current_velocity_callback_configuration(const GetCurrentVelocityCallbackConfiguration *data, GetCurrentVelocityCallbackConfiguration_Response *response) {
-	response->header.length = sizeof(GetCurrentVelocityCallbackConfiguration_Response);
+	response->header.length       = sizeof(GetCurrentVelocityCallbackConfiguration_Response);
+	response->period              = drv8701.cb_curent_velocity_period;
+	response->value_has_to_change = drv8701.cb_current_velocity_value_has_to_change;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -426,10 +439,12 @@ bool handle_emergency_shutdown_callback(void) {
 	static EmergencyShutdown_Callback cb;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(EmergencyShutdown_Callback), FID_CALLBACK_EMERGENCY_SHUTDOWN);
-		// TODO: Implement EmergencyShutdown callback handling
-
-		return false;
+		if(drv8701.thermal_shutdown) {
+			tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(EmergencyShutdown_Callback), FID_CALLBACK_EMERGENCY_SHUTDOWN);
+			drv8701.thermal_shutdown = false;
+		} else {
+			return false;
+		}
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -448,10 +463,13 @@ bool handle_velocity_reached_callback(void) {
 	static VelocityReached_Callback cb;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(VelocityReached_Callback), FID_CALLBACK_VELOCITY_REACHED);
-		// TODO: Implement VelocityReached callback handling
-
-		return false;
+		if(drv8701.velocity_reached) {
+			tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(VelocityReached_Callback), FID_CALLBACK_VELOCITY_REACHED);
+			cb.velocity = drv8701.velocity_current;
+			drv8701.velocity_reached = false;
+		} else {
+			return false;
+		}
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -468,12 +486,23 @@ bool handle_velocity_reached_callback(void) {
 bool handle_current_velocity_callback(void) {
 	static bool is_buffered = false;
 	static CurrentVelocity_Callback cb;
+	static uint32_t last_time = 0;
+	static int16_t velocity = 0;
 
 	if(!is_buffered) {
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(CurrentVelocity_Callback), FID_CALLBACK_CURRENT_VELOCITY);
-		// TODO: Implement CurrentVelocity callback handling
+		if((drv8701.cb_curent_velocity_period == 0) || !system_timer_is_time_elapsed_ms(last_time, drv8701.cb_curent_velocity_period)) {
+			return false;
+		}
 
-		return false;
+		if(drv8701.cb_current_velocity_value_has_to_change && (velocity == drv8701.velocity_current)) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(CurrentVelocity_Callback), FID_CALLBACK_CURRENT_VELOCITY);
+		cb.velocity = drv8701.velocity_current;
+
+		velocity    = drv8701.velocity_current;
+		last_time   = system_timer_get_ms();
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {

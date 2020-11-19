@@ -28,25 +28,35 @@
 #include "bricklib2/utility/led_flicker.h"
 
 typedef struct {
-    int16_t velocity;
-    int16_t velocity_current;
+	int16_t velocity;
+	int16_t velocity_current;
 
-    int32_t velocity_current_high_res;
+	int32_t velocity_current_high_res;
 
-    uint16_t acceleration;
-    uint16_t deceleration;
-    uint16_t pwm_frequency;
+	uint16_t acceleration;
+	uint16_t deceleration;
+	uint16_t pwm_frequency;
 
-    bool full_brake;
-    bool enabled;
+	bool full_brake;
+	bool enabled;
 
-    uint8_t drive_mode;
+	uint8_t drive_mode;
 
 	LEDFlickerState error_led_flicker_state;
 	LEDFlickerState cw_led_flicker_state;
 	LEDFlickerState ccw_led_flicker_state;
 
-    uint16_t max_duty_cycle;
+	uint16_t max_duty_cycle;
+
+	uint8_t thermal_shutdown_temperature;
+
+	bool cb_emergency_shutdown_enabled;
+	bool cb_velocity_reached_enabled;
+	uint32_t cb_curent_velocity_period;
+	bool cb_current_velocity_value_has_to_change;
+
+	bool velocity_reached;
+	bool thermal_shutdown;
 } DRV8701;
 
 extern DRV8701 drv8701;

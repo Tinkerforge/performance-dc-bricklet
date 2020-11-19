@@ -74,6 +74,9 @@ void drv8701_init(void) {
 	drv8701.acceleration  = 10000;
 	drv8701.deceleration  = 10000;
 	drv8701.pwm_frequency = 20000;
+
+	drv8701.thermal_shutdown_temperature = 125;
+	drv8701.cb_emergency_shutdown_enabled = true; // Emergency shutdown callback is enabled by default
 }
 
 static void drv8701_handle_error_led(const uint32_t t) {
@@ -238,11 +241,31 @@ void drv8701_tick_update_velocity(const uint32_t t) {
 		if(drv8701.velocity*1000 > drv8701.velocity_current_high_res) {
 			drv8701.velocity_current_high_res = drv8701.velocity*1000;
 		}
+	} else {
+		// If velocity is already reached we return here so we never send
+		// the velocity reached callback more then once.
+		return;
+	}
+
+	if(drv8701.velocity == current_velocity) {
+		drv8701.velocity_reached = true;
+	}
+}
+
+void drv8701_check_thermal_shudown(void) {
+	// voltage.temperature is in °C*10 and rv8701.thermal_shutdown_temperature is in °C
+	if(voltage.temperature > (drv8701.thermal_shutdown_temperature*10)) {
+		if(drv8701.enabled) {
+			drv8701.enabled          = false;
+			drv8701.thermal_shutdown = true;
+		}
 	}
 }
 
 void drv8701_tick(void) {
 	const uint32_t t = system_timer_get_ms();
+
+	drv8701_check_thermal_shudown();
 
 	if(drv8701.enabled) {
 		XMC_GPIO_SetOutputHigh(DRV8701_NSLEEP_PIN);
