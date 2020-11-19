@@ -465,7 +465,7 @@ bool handle_velocity_reached_callback(void) {
 	if(!is_buffered) {
 		if(drv8701.velocity_reached) {
 			tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(VelocityReached_Callback), FID_CALLBACK_VELOCITY_REACHED);
-			cb.velocity = drv8701.velocity_current;
+			cb.velocity = drv8701.velocity_current_high_res/1000;
 			drv8701.velocity_reached = false;
 		} else {
 			return false;
@@ -494,14 +494,15 @@ bool handle_current_velocity_callback(void) {
 			return false;
 		}
 
-		if(drv8701.cb_current_velocity_value_has_to_change && (velocity == drv8701.velocity_current)) {
+		const int16_t velocity_current = drv8701.velocity_current_high_res/1000;
+		if(drv8701.cb_current_velocity_value_has_to_change && (velocity == velocity_current)) {
 			return false;
 		}
 
 		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(CurrentVelocity_Callback), FID_CALLBACK_CURRENT_VELOCITY);
-		cb.velocity = drv8701.velocity_current;
+		cb.velocity = velocity_current;
 
-		velocity    = drv8701.velocity_current;
+		velocity    = velocity_current;
 		last_time   = system_timer_get_ms();
 	}
 

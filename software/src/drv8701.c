@@ -247,7 +247,7 @@ void drv8701_tick_update_velocity(const uint32_t t) {
 		return;
 	}
 
-	if(drv8701.velocity == current_velocity) {
+	if(drv8701.velocity == drv8701.velocity_current_high_res/1000) {
 		drv8701.velocity_reached = true;
 	}
 }

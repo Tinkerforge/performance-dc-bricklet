@@ -29,8 +29,6 @@
 
 typedef struct {
 	int16_t velocity;
-	int16_t velocity_current;
-
 	int32_t velocity_current_high_res;
 
 	uint16_t acceleration;
