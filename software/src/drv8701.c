@@ -84,9 +84,9 @@ static void drv8701_handle_error_led(const uint32_t t) {
 
 	if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_HEARTBEAT) {
 		led_flicker_tick(&drv8701.error_led_flicker_state, t, DRV8701_LED_ERROR_PIN);
-	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_ON) {
+	} else if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_ON) {
 		XMC_GPIO_SetOutputLow(DRV8701_LED_ERROR_PIN);
-	} else if(drv8701.cw_led_flicker_state.config == PERFORMANCE_DC_CW_LED_CONFIG_OFF) {
+	} else if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_OFF) {
 		XMC_GPIO_SetOutputHigh(DRV8701_LED_ERROR_PIN);
 	} else if(drv8701.error_led_flicker_state.config == PERFORMANCE_DC_ERROR_LED_CONFIG_SHOW_ERROR) {
 		uint32_t error = 0;
