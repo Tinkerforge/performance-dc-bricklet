@@ -94,7 +94,7 @@ static void drv8701_handle_error_led(const uint32_t t) {
 			error = 500;
 		}
 
-		if(!XMC_GPIO_GetInput(DRV8701_NFAULT_PIN)) {
+		if(drv8701.nfault) {
 			error = 125;
 		}
 
@@ -260,12 +260,35 @@ void drv8701_check_thermal_shudown(void) {
 			drv8701.thermal_shutdown = true;
 		}
 	}
+
+	if(drv8701.nfault) {
+		if(drv8701.enabled) {
+			drv8701.enabled          = false;
+			drv8701.thermal_shutdown = true;
+		}
+	}
+}
+
+void drv8701_check_nfault(void) {
+	if(!XMC_GPIO_GetInput(DRV8701_NFAULT_PIN)) {
+		if(drv8701.nfault_last_time == 0) {
+			drv8701.nfault_last_time = system_timer_get_ms();
+		} else {
+			if(system_timer_is_time_elapsed_ms(drv8701.nfault_last_time, 100)) {
+				drv8701.nfault = true;
+			}
+		}
+	} else {
+		drv8701.nfault           = false;
+		drv8701.nfault_last_time = 0;
+	}
 }
 
 void drv8701_tick(void) {
 	const uint32_t t = system_timer_get_ms();
 
 	drv8701_check_thermal_shudown();
+	drv8701_check_nfault();
 
 	if(drv8701.enabled) {
 		XMC_GPIO_SetOutputHigh(DRV8701_NSLEEP_PIN);

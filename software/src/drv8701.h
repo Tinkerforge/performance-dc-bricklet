@@ -55,6 +55,9 @@ typedef struct {
 
 	bool velocity_reached;
 	bool thermal_shutdown;
+
+	bool nfault;
+	uint32_t nfault_last_time;
 } DRV8701;
 
 extern DRV8701 drv8701;
