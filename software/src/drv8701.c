@@ -94,7 +94,7 @@ static void drv8701_handle_error_led(const uint32_t t) {
 			error = 500;
 		}
 
-		if(drv8701.nfault) {
+		if(drv8701.nfault || drv8701.thermal_shutdown) {
 			error = 125;
 		}
 
