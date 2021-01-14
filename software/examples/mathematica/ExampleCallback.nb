@@ -1,0 +1,59 @@
+Notebook[{
+ Cell[
+  BoxData[{
+   RowBox[{"Needs", "[", "\"\<NETLink`\>\"", "]"}],
+   RowBox[{"LoadNETAssembly", "[", RowBox[{"\"\<Tinkerforge\>\"", ",", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<../../..\>\""}]}], "]"}]
+  }], "Input"
+ ],
+ Cell[
+  BoxData[{
+   RowBox[{"host", "=", "\"\<localhost\>\""}],
+   RowBox[{"port", "=", "4223"}],
+   RowBox[{"uid", "=", "\"\<XYZ\>\"", RowBox[{"(*", "Change XYZ to the UID of your Performance DC Bricklet", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Create IPConnection and device object", "*)"}],
+   RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
+   RowBox[{"pdc", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletPerformanceDC\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Use velocity reached callback to swing back and forth", "*)"}],
+   RowBox[{"(*", "between full speed forward and full speed backward", "*)"}],
+   RowBox[{RowBox[{"VelocityReachedCB", "[", RowBox[{"sender_", ",", "velocity_"}], "]"}], ":=", "\[IndentingNewLine]", RowBox[{"Module", "[", RowBox[{RowBox[{"{", "}"}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"velocity", "==", "32767"}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"Print", "[", "\"\<Velocity: Full speed forward, now turning backward\>\"", "]"}], ";", "\[IndentingNewLine]", "sender", "@", RowBox[{"SetVelocity", "[", RowBox[{"-", "32767"}], "]"}], "\[IndentingNewLine]"}]}], "]"}], ";", "\[IndentingNewLine]", RowBox[{"If", "[", RowBox[{RowBox[{"velocity", "==", RowBox[{"-", "32767"}]}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"Print", "[", "\"\<Velocity: Full speed backward, now turning forward\>\"", "]"}], ";", "\[IndentingNewLine]", "sender", "@", RowBox[{"SetVelocity", "[", "32767", "]"}], "\[IndentingNewLine]"}]}], "]"}], "\[IndentingNewLine]"}]}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"pdc", "@", "VelocityReachedCallback"}], ",", "VelocityReachedCB"}], "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Enable velocity reached callback", "*)"}],
+   RowBox[{"pdc", "@", RowBox[{"SetVelocityReachedCallbackConfiguration", "[", "True", "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "The acceleration has to be smaller or equal to the maximum", "*)"}],
+   RowBox[{"(*", "acceleration of the DC motor, otherwise the velocity reached", "*)"}],
+   RowBox[{"(*", "callback will be called too early", "*)"}],
+   RowBox[{"pdc", "@", RowBox[{"SetMotion", "[", RowBox[{"4096", ",", "4096"}], "]"}], RowBox[{"(*", "Slow acceleration (12.5 %/s)", "*)"}]}],
+   RowBox[{"pdc", "@", RowBox[{"SetVelocity", "[", "32767", "]"}], RowBox[{"(*", "Full speed forward (100 %)", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Enable motor power", "*)"}],
+   RowBox[{"pdc", "@", RowBox[{"SetEnabled", "[", "True", "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"Input", "[", "\"\<Click OK to exit\>\"", "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Stop motor before disabling motor power", "*)"}],
+   RowBox[{"pdc", "@", RowBox[{"SetMotion", "[", RowBox[{"4096", ",", "16384"}], "]"}], RowBox[{"(*", "Fast decceleration (50 %/s) for stopping", "*)"}]}],
+   RowBox[{"pdc", "@", RowBox[{"SetVelocity", "[", "0", "]"}], RowBox[{"(*", "Request motor stop", "*)"}]}],
+   RowBox[{RowBox[{"Pause", "[", "2", "]"}], RowBox[{"(*", "Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s", "*)"}]}],
+   RowBox[{"pdc", "@", RowBox[{"SetEnabled", "[", "False", "]"}], RowBox[{"(*", "Disable motor power", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
+   RowBox[{"ReleaseNETObject", "[", "pdc", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
+  }], "Input"
+ ]
+}]

@@ -1,0 +1,45 @@
+# Change XYZ to the UID of your Performance DC Bricklet
+
+setup:
+	# Use velocity reached callback to swing back and forth
+	# between full speed forward and full speed backward
+	subscribe to tinkerforge/callback/performance_dc_bricklet/XYZ/velocity_reached
+		if a message arrives
+			# message contains velocity as int
+			if velocity == 32767
+				print "Velocity: Full speed forward, now turning backward"
+				publish '{"velocity": -32767}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_velocity
+			elseif velocity == -32767
+				print "Velocity: Full speed backward, now turning forward"
+				publish '{"velocity": 32767}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_velocity
+			else
+				print "Error"
+			endif
+		endif
+	endsubscribe
+
+	publish '{"register": true}' to tinkerforge/register/performance_dc_bricklet/XYZ/velocity_reached # Register velocity_reached callback
+
+	# Enable velocity reached callback
+	publish '{"enabled": true}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_velocity_reached_callback_configuration
+
+	# The acceleration has to be smaller or equal to the maximum
+	# acceleration of the DC motor, otherwise the velocity reached
+	# callback will be called too early
+	publish '{"acceleration": 4096, "deceleration": 4096}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_motion # Slow acceleration (12.5 %/s)
+
+	publish '{"velocity": 32767}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_velocity # Full speed forward (100 %)
+
+	# Enable motor power
+	publish '{"enabled": true}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_enabled
+
+cleanup:
+	# If you are done, run this to clean up
+	# Stop motor before disabling motor power
+	publish '{"acceleration": 4096, "deceleration": 16384}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_motion # Fast decceleration (50 %/s) for stopping
+
+	publish '{"velocity": 0}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_velocity # Request motor stop
+
+	wait for 2s # Wait for motor to actually stop: velocity (100 %) / decceleration (50 %/s) = 2 s
+
+	publish '{"enabled": false}' to tinkerforge/request/performance_dc_bricklet/XYZ/set_enabled # Disable motor power
