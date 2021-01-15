@@ -23,10 +23,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         for velocity_reached in velocity_reached_receiver {
             if velocity_reached == 32767 {
                 println!("Velocity: Full speed forward, now turning backward");
-                pdc_copy.set_velocity(-32767).recv()?;
+                pdc_copy.set_velocity(-32767);
             } else if velocity_reached == -32767 {
                 println!("Velocity: Full speed backward, now turning forward");
-                pdc_copy.set_velocity(32767).recv()?;
+                pdc_copy.set_velocity(32767);
             } else {
                 //can only happen if another program sets velocity
                 panic!("Error");
