@@ -193,5 +193,9 @@ void gpio_tick(void) {
 				NVIC_EnableIRQ(gpio_pins[channel].irq_n);
 			}
 		}
+
+		if(gpio.gpio_led_flicker_state[channel].config == PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_HEARTBEAT) {
+			led_flicker_tick(&drv8701.error_led_flicker_state, system_timer_get_ms(), gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
+		}
 	}
 }
