@@ -121,8 +121,8 @@ void gpio_init(void) {
 	gpio.debounce[1]                      = 50; // 50ms default
 	gpio.stop_deceleration[0]             = 0xFFFF;
 	gpio.stop_deceleration[1]             = 0xFFFF;
-	gpio.gpio_led_flicker_state[0].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
-	gpio.gpio_led_flicker_state[1].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_LOW;
+	gpio.gpio_led_flicker_state[0].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH;
+	gpio.gpio_led_flicker_state[1].config = PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_GPIO_ACTIVE_HIGH;
 
 
 	// Init GPIO IRQs
