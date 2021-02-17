@@ -1,5 +1,5 @@
 /* performance-dc-bricklet
- * Copyright (C) 2019 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * config.h: All configurations for Performance DC Bricklet
  *
@@ -31,7 +31,7 @@
 
 #define FIRMWARE_VERSION_MAJOR 2
 #define FIRMWARE_VERSION_MINOR 0
-#define FIRMWARE_VERSION_REVISION 0
+#define FIRMWARE_VERSION_REVISION 1
 
 #define CCU4_PWM_PASSIVE_LEVEL XMC_CCU4_SLICE_OUTPUT_PASSIVE_LEVEL_HIGH
 #define CCU4_PWM_PUSH_PULL_ALT XMC_GPIO_MODE_OUTPUT_PUSH_PULL_ALT4

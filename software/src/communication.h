@@ -1,5 +1,5 @@
 /* performance-dc-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -126,6 +126,7 @@ void communication_init(void);
 #define FID_CALLBACK_EMERGENCY_SHUTDOWN 35
 #define FID_CALLBACK_VELOCITY_REACHED 36
 #define FID_CALLBACK_CURRENT_VELOCITY 37
+#define FID_CALLBACK_GPIO_STATE 38
 
 typedef struct {
 	TFPMessageHeader header;
@@ -396,6 +397,11 @@ typedef struct {
 	int16_t velocity;
 } __attribute__((__packed__)) CurrentVelocity_Callback;
 
+typedef struct {
+	TFPMessageHeader header;
+	uint8_t gpio_state[1];
+} __attribute__((__packed__)) GPIOState_Callback;
+
 
 // Function prototypes
 BootloaderHandleMessageResponse set_enabled(const SetEnabled *data);
@@ -437,13 +443,15 @@ BootloaderHandleMessageResponse get_current_velocity_callback_configuration(cons
 bool handle_emergency_shutdown_callback(void);
 bool handle_velocity_reached_callback(void);
 bool handle_current_velocity_callback(void);
+bool handle_gpio_state_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 3
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 4
 #define COMMUNICATION_CALLBACK_LIST_INIT \
 	handle_emergency_shutdown_callback, \
 	handle_velocity_reached_callback, \
 	handle_current_velocity_callback, \
+	handle_gpio_state_callback, \
 
 
 #endif

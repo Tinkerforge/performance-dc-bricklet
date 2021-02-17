@@ -1,2 +1,5 @@
-<unknown-date>: 2.0.0 (<unknown-sha1>)
+2021-01-18: 2.0.0 (29093be)
 - Initial version
+
+2021-02-17: 2.0.1 (TBD)
+- Add API for GPIO State callback

@@ -1,5 +1,5 @@
 /* performance-dc-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * gpio.c: Driver for Performance DC Bricklet GPIO
  *
@@ -69,7 +69,11 @@ static inline void __attribute__((optimize("-O3"))) __attribute__ ((section (".r
 		NVIC_ClearPendingIRQ(gpio_pins[channel].irq_n);
 	}
 
-	// TODO: handle callback here
+	// Check for callback
+	if(( value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_CALLBACK_RISING_EDGE)) ||
+	   (!value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_CALLBACK_FALLING_EDGE))) {
+		gpio.new_callback = true;
+	}
 
 	// Check if action is necessary
 	if(value && (gpio.action[channel] & PERFORMANCE_DC_GPIO_ACTION_FULL_BRAKE_RISING_EDGE)) {
@@ -195,7 +199,7 @@ void gpio_tick(void) {
 		}
 
 		if(gpio.gpio_led_flicker_state[channel].config == PERFORMANCE_DC_GPIO_LED_CONFIG_SHOW_HEARTBEAT) {
-			led_flicker_tick(&drv8701.error_led_flicker_state, system_timer_get_ms(), gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
+			led_flicker_tick(&gpio.gpio_led_flicker_state[channel], system_timer_get_ms(), gpio_led_pins[channel].port, gpio_led_pins[channel].pin);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /* performance-dc-bricklet
- * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
+ * Copyright (C) 2020-2021 Olaf Lüke <olaf@tinkerforge.com>
  *
  * gpio.h: Driver for Performance DC Bricklet GPIO
  *
@@ -40,6 +40,8 @@ typedef struct {
 
 	bool stop_normal;
 	bool stop_emergency;
+
+	bool new_callback;
 
 	LEDFlickerState gpio_led_flicker_state[GPIO_CHANNEL_NUM];
 } GPIO;
