@@ -12,7 +12,7 @@ from tinkerforge.bricklet_performance_dc import BrickletPerformanceDC
 
 # Use velocity reached callback to swing back and forth
 # between full speed forward and full speed backward
-def cb_velocity_reached(velocity):
+def cb_velocity_reached(velocity, pdc):
     if velocity == 32767:
         print('Velocity: Full speed forward, now turning backward')
         pdc.set_velocity(-32767)
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     # Don't use device before ipcon is connected
 
     # Register velocity reached callback to function cb_velocity_reached
-    pdc.register_callback(pdc.CALLBACK_VELOCITY_REACHED, cb_velocity_reached)
+    pdc.register_callback(pdc.CALLBACK_VELOCITY_REACHED,
+                          lambda x: cb_velocity_reached(x, pdc))
 
     # Enable velocity reached callback
     pdc.set_velocity_reached_callback_configuration(True)
