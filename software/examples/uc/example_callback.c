@@ -1,19 +1,13 @@
 // This example is not self-contained.
-// It requres usage of the example driver specific to your platform.
+// It requires usage of the example driver specific to your platform.
 // See the HAL documentation.
 
-#include "bindings/hal_common.h"
-#include "bindings/bricklet_performance_dc.h"
+#include "src/bindings/hal_common.h"
+#include "src/bindings/bricklet_performance_dc.h"
 
-// FIXME: This example is incomplete
-
-#define UID "XYZ" // Change XYZ to the UID of your Performance DC Bricklet
-
-void check(int rc, const char* msg);
-
+void check(int rc, const char *msg);
 void example_setup(TF_HAL *hal);
 void example_loop(TF_HAL *hal);
-
 
 // Use velocity reached callback to swing back and forth
 // between full speed forward and full speed backward
@@ -21,14 +15,22 @@ static void velocity_reached_handler(TF_PerformanceDC *device, int16_t velocity,
                                      void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
-	tf_hal_printf("Velocity: %I16d\n", velocity);
+	if (velocity == 32767) {
+		tf_hal_printf("Velocity: Full speed forward, now turning backward\n");
+		tf_performance_dc_set_velocity(device, -32767);
+	} else if (velocity == -32767) {
+		tf_hal_printf("Velocity: Full speed backward, now turning forward\n");
+		tf_performance_dc_set_velocity(device, 32767);
+	} else {
+		tf_hal_printf("Error\n"); // Can only happen if another program sets velocity
+	}
 }
 
 static TF_PerformanceDC pdc;
 
 void example_setup(TF_HAL *hal) {
 	// Create device object
-	check(tf_performance_dc_create(&pdc, UID, hal), "create device object");
+	check(tf_performance_dc_create(&pdc, NULL, hal), "create device object");
 
 	// Register velocity reached callback to function velocity_reached_handler
 	tf_performance_dc_register_velocity_reached_callback(&pdc,
